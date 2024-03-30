@@ -1,67 +1,74 @@
+package newpackage;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class CountUpDownApp extends JFrame {
-    private JLabel countLabel;
-    private int count = 0;
+public class NewClass {
 
-    public CountUpDownApp() {
-        super("Count Up Down App");
-        setSize(300, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Count Up Down App");
+        frame.setSize(300, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
 
-        // Top panel for count display
+        // Initialize count as AtomicInteger
+        AtomicInteger count = new AtomicInteger(0);
+        
         JPanel topPanel = new JPanel();
-        countLabel = new JLabel("Count: " + count);
-        topPanel.add(countLabel);
-        add(topPanel, BorderLayout.NORTH);
+        JLabel topLabel = new JLabel("Count Up/Down App");
+        topPanel.add(topLabel);
+        frame.add(topPanel, BorderLayout.NORTH);
 
-        // Middle panel for buttons
-        JPanel middlePanel = new JPanel();
-        middlePanel.setLayout(new GridLayout(1, 2));
+        
+        JPanel midPanel = new JPanel(new GridBagLayout());
+        JLabel countLabel = new JLabel("Count: " + count.get());
+        midPanel.add(countLabel, new GridBagConstraints());
+        frame.add(midPanel, BorderLayout.CENTER);
+        
 
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS)); // Use BoxLayout with vertical alignment
         JButton upButton = new JButton("Up");
+        leftPanel.add(Box.createVerticalGlue()); // Add glue to push glue button to the top
+        leftPanel.add(upButton);
+        leftPanel.add(Box.createVerticalGlue()); // Add glue to push glue button to the bottom
         upButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                count++;
-                updateCountLabel();
+                count.incrementAndGet();
+                countLabel.setText("Count: " + count.get());
             }
         });
-        middlePanel.add(upButton);
-
+        leftPanel.setBackground(Color.lightGray);
+        frame.add(leftPanel, BorderLayout.WEST);
+        
+ 
+      
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS)); // Use BoxLayout with vertical alignment
         JButton downButton = new JButton("Down");
+        rightPanel.add(Box.createVerticalGlue()); // Add glue to push glue button to the top
+        rightPanel.add(downButton);
+        rightPanel.add(Box.createVerticalGlue()); // Add glue to push glue button to the bottom
         downButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (count > 0) {
-                    count--;
-                    updateCountLabel();
+                if (count.get() > 0) {
+                    count.decrementAndGet();
+                    countLabel.setText("Count: " + count.get());
                 }
             }
         });
-        middlePanel.add(downButton);
+        rightPanel.setBackground(Color.lightGray);
+        frame.add(rightPanel, BorderLayout.EAST);
 
-        add(middlePanel, BorderLayout.CENTER);
-
+        
         // Bottom panel for attribution
         JPanel bottomPanel = new JPanel();
         JLabel createdByLabel = new JLabel("Created by Samrat");
         bottomPanel.add(createdByLabel);
-        add(bottomPanel, BorderLayout.SOUTH);
-
-        setVisible(true);
-    }
-
-    private void updateCountLabel() {
-        countLabel.setText("Count: " + count);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new CountUpDownApp();
-            }
-        });
+        frame.add(bottomPanel, BorderLayout.SOUTH);
+        frame.setVisible(true);
+        frame.setResizable(false);
     }
 }
